@@ -1,0 +1,16 @@
+{% extends layout.html %}
+
+{% block main %}
+<head>
+    <title>Search</title>
+</head>
+<body>
+    <form action="https://www.google.com/search">
+        <input type="text" name="q">
+        <input type="submit" value="Google Search">
+    </form>
+    <div>
+<a href="advanced_search.html">advanced search</a>
+<a href="image_search.html">Search an image</a>
+</div>
+{% endblock %}
