@@ -1,16 +1,29 @@
-{% extends layout.html %}
+{% extends "layout.html" %}
 
-{% block main %}
-<head>
-    <title>Search</title>
-</head>
+{% block body %}
 <body>
-    <form action="https://www.google.com/search">
-        <input type="text" name="q">
-        <input type="submit" value="Google Search">
-    </form>
-    <div>
-<a href="advanced_search.html">advanced search</a>
-<a href="image_search.html">Search an image</a>
-</div>
+
+    <div class="container">
+
+        <ul class="nav justify-content-end">
+            <li class="nav-item">
+            <a class="nav-link" href="advanced_search">Advanced search</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="image_search">Images</a>
+            </li>
+        </ul>
+
+        <div class="text-center">
+            <form action="https://www.google.com/search" class="divider">
+                <input type="text" name="q" autofocus class="rounded-pill form-control mb-4 mx-auto w-50">
+                <button type="submit" value="Google Search" class="btn btn-light">Google Search</button>
+                <button class="btn btn-light">I'm Feeling Lucky</button>
+            </form>
+        </div>
+
+    </div>
+
+</body>
+
 {% endblock %}

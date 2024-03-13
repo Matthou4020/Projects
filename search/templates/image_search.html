@@ -1,5 +1,24 @@
-{% extends layout.html %}
+{% extends "layout.html" %}
 
-{% block main %}
+{% block body %}
+<body>
 
+    <div class="container">
+        <ul class="nav justify-content-end">
+            <li class="nav-item">
+            <a class="nav-link" href="/">Google Search</a>
+            </li>
+        </ul>
+
+        <div class="text-center">
+            <form action="https://www.google.com/search" class="divider">
+                <input type="text" name="q" class="rounded-pill form-control mb-4 mx-auto w-50">
+                <button type="submit" value="Google Search" class="btn btn-light">Google Search</button>
+                <button class="btn btn-light">I'm Feeling Lucky</button>
+            </form>
+        </div>
+
+    </div>
+
+</body>
 {% endblock %}

@@ -1,5 +1,73 @@
-{% extends layout.html %}
+{% extends "layout.html" %}
 
-{% block main %}
+{% block body %}
+<body>
 
+    <div class="container-fluid">
+        <div class="row">
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                <a class="nav-link" href="/">Google Search</a>
+                </li>
+            </ul>
+            <div class="container-fluid">
+                <ul class="nav nav-underline">
+                    <li class="nav-item">
+                        <a class="nav-link disabled" aria-disabled="true">Advanced Search</a>
+                    </li>
+            </div>
+        </div>
+        <hr>
+        
+        <div class="row">
+            <h5>Find pages with...</h5>
+        </div>
+
+        <div class="d-flex flex-row mb-3">
+            <div class="col-2">
+                <label for="allform" class="col-form-label">All these words:</label>
+            </div>
+            <div class="col-5">
+                <form action="https://www.google.com/search">
+                    <input id="allform" type="text" autocomplete="off" name="q" class="form-control">
+            </div>
+        </div>
+
+        <div class="d-flex flex-row mb-3">
+            <div class="col-2">
+                <label for="thisform" class="col-form-label">This exact word or phrase:</label>
+            </div>
+            <div class="col-5">
+                <form action="https://www.google.com/search">
+                    <input id="thisform" type="text" autocomplete="off" name="q" class="form-control ">
+            </div>
+        </div>
+
+        <div class="d-flex flex-row mb-3">
+            <div class="col-2">
+                <label for="anyform" class="col-form-label">Any of these words:</label>
+            </div>
+            <div class="col-5">
+                <form action="https://www.google.com/search">
+                    <input id="anyform" type="text" autocomplete="off" name="q" class="form-control ">
+            </div>
+        </div>
+
+        <div class="d-flex flex-row mb-3">
+            <div class="col-2">
+                <label for="noneform" class="col-form-label">None of these words:</label>
+            </div>
+            <div class="col-5">
+                <form action="https://www.google.com/search">
+                    <input id="noneform" type="text" autocomplete="off" name="q" class="form-control">
+            </div>
+                </form>
+            </div>
+            <div class="col-7">
+                <button id="advanced_search" type="button" class=" mt-2 btn btn-primary">Advanced search</button>
+            </div>
+        </div>
+    </div>
+
+</body>
 {% endblock %}
