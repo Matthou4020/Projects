@@ -2,23 +2,21 @@
 
 {% block body %}
 <body>
-
-    <div class="container">
-        <ul class="nav justify-content-end">
-            <li class="nav-item">
+    <div class="container-fluid">
+        <ul class="nav m-3">
+            <li class="nav-item ms-auto">
             <a class="nav-link" href="/">Google Search</a>
             </li>
         </ul>
 
         <div class="text-center">
+            <img class="img-fluid w-50" src="static/belgiumnationalday.png" alt="Belgium doodle">
             <form action="https://www.google.com/search" class="divider">
-                <input type="text" name="q" class="rounded-pill form-control mb-4 mx-auto w-50">
-                <button type="submit" value="Google Search" class="btn btn-light">Google Search</button>
-                <button class="btn btn-light">I'm Feeling Lucky</button>
+                <input type="text" name="q" autofocus class="rounded-pill form-control mb-4 mx-auto w-25">
+                <input type="hidden" name="tbm" value="isch">
+                <button type="submit" value="Google Search" class="btn btn-light">Search images</button>
             </form>
         </div>
-
     </div>
-
 </body>
 {% endblock %}

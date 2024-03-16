@@ -29,7 +29,7 @@
             </div>
             <div class="col-5">
                 <form action="https://www.google.com/search">
-                    <input id="allform" type="text" autocomplete="off" name="q" class="form-control">
+                    <input id="allform" type="text" autofocus autocomplete="off" name="as_q" class="form-control">
             </div>
         </div>
 
@@ -38,8 +38,7 @@
                 <label for="thisform" class="col-form-label">This exact word or phrase:</label>
             </div>
             <div class="col-5">
-                <form action="https://www.google.com/search">
-                    <input id="thisform" type="text" autocomplete="off" name="q" class="form-control ">
+                    <input id="thisform" type="text" autocomplete="off" name="as_epq" class="form-control ">
             </div>
         </div>
 
@@ -48,8 +47,7 @@
                 <label for="anyform" class="col-form-label">Any of these words:</label>
             </div>
             <div class="col-5">
-                <form action="https://www.google.com/search">
-                    <input id="anyform" type="text" autocomplete="off" name="q" class="form-control ">
+                    <input id="anyform" type="text" autocomplete="off" name="as_oq" class="form-control ">
             </div>
         </div>
 
@@ -58,16 +56,14 @@
                 <label for="noneform" class="col-form-label">None of these words:</label>
             </div>
             <div class="col-5">
-                <form action="https://www.google.com/search">
-                    <input id="noneform" type="text" autocomplete="off" name="q" class="form-control">
+                    <input id="noneform" type="text" autocomplete="off" name="as_eq" class="form-control">
             </div>
-                </form>
             </div>
             <div class="col-7">
-                <button id="advanced_search" type="button" class=" mt-2 btn btn-primary">Advanced search</button>
+                <button id="advanced_search" type="submit" value="Google Search" class="mt-2 btn btn-primary">Advanced search</button>
+            </form>
             </div>
         </div>
     </div>
-
 </body>
 {% endblock %}

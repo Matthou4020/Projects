@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<header>
+    <div class="container">
+        <ul class="nav justify-content-end">
+            <li class="nav-item">
+              <a class="nav-link" href="advanced_search">Advanced search</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="image_search">Image search</a>
+            </li>
+          </ul>
+    </div>
+</header>
+
+
+<main>
+    <div class="d-flex justify-content-center">
+        <div class="row content">
+            <div class="col-12">
+                <form class="row gy-3 gx-2" action="https://www.google.com/search">
+                    <input class="rounded-pill form-control-lg" type="text" name="q">
+                    <div class="col-6 mx-auto">
+                        <input class="btn btn-primary" type="submit" value="Google Search">
+                        <input class="btn btn-secondary" type="submit" value="Feeling Lucky">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
