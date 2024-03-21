@@ -5,8 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from .models import *
-from .models import User
-
+from .forms import *
 
 def index(request):
     return render(request, "auctions/index.html")
@@ -64,4 +63,30 @@ def register(request):
 
 @login_required
 def new_listing(request):
-    return render(request, "auction/new_listing.html")
+    if request.method == "GET":
+        return render(request, "auctions/new_listing.html", {
+            "newlistingform": NewListingForm()
+    })
+    if request.method == "POST":
+        form = NewListingForm(request.POST)
+        userdata = request.user
+        if form.is_valid():
+            title = form.cleaned_data["title"]
+            description = form.cleaned_data["description"]
+            startingbid = form.cleaned_data["starting_bid"]
+            imageurl = form.cleaned_data["image"]
+            type = form.cleaned_data["type"]
+            
+            current_user = request.user
+            
+        new_listing = AuctionListing(title=title, 
+                                     description=description,
+                                     startingbid=startingbid,
+                                     imageurl=imageurl,
+                                     type=type,
+                                     user=current_user
+            )
+        new_listing.save()
+    else:
+        form = NewListingForm()
+    return HttpResponseRedirect(reverse("index"))

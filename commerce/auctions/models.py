@@ -6,11 +6,18 @@ class User(AbstractUser):
     pass
 
 class AuctionListing(models.Model):
-    AuctionName = models.CharField(max_length=50)
-    HighestBidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="highestbidder")
+    title = models.CharField(max_length=50)
+    description = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user", null=True, default=None)
+    startingbid = models.IntegerField()
+    imageurl = models.URLField()
+    type = models.CharField(max_length=20)
+
+
+
 
 class Bids(models.Model):
-    BidAmount = models.IntegerField(max_length = 9)
+    BidAmount = models.IntegerField()
 
 class Comments(models.Model):
     Comment = models.TextField(max_length=200)
