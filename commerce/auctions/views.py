@@ -8,7 +8,11 @@ from .models import *
 from .forms import *
 
 def index(request):
-    return render(request, "auctions/index.html")
+    return render(request, "auctions/index.html", {
+        "auctionlistings": AuctionListing.objects.all()
+    })
+
+
 
 def login_view(request):
     if request.method == "POST":
@@ -69,24 +73,27 @@ def new_listing(request):
     })
     if request.method == "POST":
         form = NewListingForm(request.POST)
-        userdata = request.user
         if form.is_valid():
             title = form.cleaned_data["title"]
             description = form.cleaned_data["description"]
-            startingbid = form.cleaned_data["starting_bid"]
+            starting_bid = form.cleaned_data["starting_bid"]
             imageurl = form.cleaned_data["image"]
             type = form.cleaned_data["type"]
-            
-            current_user = request.user
-            
-        new_listing = AuctionListing(title=title, 
+            current_user = request.user            
+            new_listing = AuctionListing(title=title, 
                                      description=description,
-                                     startingbid=startingbid,
+                                     startingbid=starting_bid,
                                      imageurl=imageurl,
                                      type=type,
                                      user=current_user
             )
-        new_listing.save()
+            new_listing.save()
     else:
         form = NewListingForm()
+
     return HttpResponseRedirect(reverse("index"))
+
+def listing(request, listing):
+    return render(request, "auctions/listing.html", {
+        "listing":listing
+    })

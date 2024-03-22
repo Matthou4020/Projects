@@ -1,6 +1,12 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+    {% if user.is_authenticated %}
     <h2>Active Listings</h2>
-    <a href="{% url 'new_listing' %}">Create a new listing</a>
+    <ul>
+        {% for listing in auctionlistings %}
+            <li><a href="{{listing.title}}">{{listing.title}}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 {% endblock %}

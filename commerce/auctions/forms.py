@@ -11,7 +11,7 @@ class NewListingForm(forms.Form):
     
     starting_bid = forms.IntegerField()
     image = forms.URLField(label="Add an image")
-    type = forms.MultipleChoiceField(choices= {
+    type = forms.ChoiceField(choices= {
         "fashion": "Fashion", 
         "toys": "Toys", 
         "electronics": "Electronics",
