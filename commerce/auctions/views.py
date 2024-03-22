@@ -96,6 +96,47 @@ def new_listing(request):
 
 def listing(request, listing):
     current_listing = AuctionListing.objects.get(title=listing)
-    return render(request, "auctions/listing.html", {
-        "listing": current_listing
-    })
+    watchlistform = WatchlistForm()
+    if request.method == "GET":
+        onwatchlist = current_listing.onwatchlist
+        return render(request, "auctions/listing.html", {
+            "listing": current_listing,
+            "watchlistform": watchlistform,
+            "onwatchlist": onwatchlist
+        })
+    
+    if request.method == "POST":
+        button_value = request.POST.get('button_value')
+        if button_value == 'added':
+            current_listing.onwatchlist = True
+        
+        elif button_value == 'deleted':
+           current_listing.onwatchlist = False
+
+        onwatchlist = current_listing.onwatchlist
+        current_listing.save()
+        return render(request, "auctions/listing.html", {
+            "listing": current_listing,
+            "watchlistform": watchlistform,
+            "onwatchlist": onwatchlist
+        })
+
+
+
+@login_required
+def watchlist(request):
+    if request.method == "GET":
+        current_user = request.user
+        watchlist = AuctionListing.objects.filter(user=current_user, onwatchlist=True)
+        watchlistform = WatchlistForm()
+        return render (request, "auctions/watchlist.html",{
+            "watchlist": watchlist,
+            "watchlistform": watchlistform
+        })
+    if request.method == "POST":
+        form = request.POST.get("button_value")
+        title = form
+        listing = AuctionListing.objects.get(title=title)
+        listing.onwatchlist = False
+        listing.save()
+        return render(request, "auctions/watchlist.html")

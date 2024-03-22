@@ -13,6 +13,7 @@ class AuctionListing(models.Model):
     startingbid = models.IntegerField()
     imageurl = models.URLField()
     type = models.CharField(max_length=20)
+    onwatchlist = models.BooleanField(default=False)
 
 class Bids(models.Model):
     BidAmount = models.IntegerField()

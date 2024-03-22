@@ -17,3 +17,6 @@ class NewListingForm(forms.Form):
         "electronics": "Electronics",
         "home": "Home"
     })
+
+class WatchlistForm(forms.Form):
+    boolswitch = forms.CharField(widget=forms.HiddenInput, initial="False")
