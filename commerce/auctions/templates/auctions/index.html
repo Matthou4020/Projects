@@ -2,11 +2,12 @@
 
 {% block body %}
     {% if user.is_authenticated %}
-    <h2>Active Listings</h2>
+    <h2>Your active listings</h2>
+    {% endif %}
+    <h2>Active listings</h2>
     <ul>
         {% for listing in auctionlistings %}
             <li><a href="{{listing.title}}">{{listing.title}}</a></li>
         {% endfor %}
     </ul>
-    {% endif %}
 {% endblock %}

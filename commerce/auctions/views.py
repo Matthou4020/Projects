@@ -8,9 +8,10 @@ from .models import *
 from .forms import *
 
 def index(request):
-    return render(request, "auctions/index.html", {
-        "auctionlistings": AuctionListing.objects.all()
-    })
+        active_listings = AuctionListing.objects.all()
+        return render(request, "auctions/index.html", {
+            "auctionlistings": active_listings
+        })
 
 
 
@@ -94,6 +95,7 @@ def new_listing(request):
     return HttpResponseRedirect(reverse("index"))
 
 def listing(request, listing):
+    current_listing = AuctionListing.objects.get(title=listing)
     return render(request, "auctions/listing.html", {
-        "listing":listing
+        "listing": current_listing
     })
