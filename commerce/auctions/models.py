@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class User(AbstractUser):
+class User(AbstractUser): 
     pass
 
 class AuctionListing(models.Model):
@@ -12,9 +12,6 @@ class AuctionListing(models.Model):
     startingbid = models.IntegerField()
     imageurl = models.URLField()
     type = models.CharField(max_length=20)
-
-
-
 
 class Bids(models.Model):
     BidAmount = models.IntegerField()
