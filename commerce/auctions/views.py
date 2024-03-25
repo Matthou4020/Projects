@@ -4,7 +4,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import *
+from .models import User, AuctionListing, Bid, Comment
 from .forms import *
 
 def index(request):
@@ -12,7 +12,6 @@ def index(request):
         return render(request, "auctions/index.html", {
             "auctionlistings": active_listings
         })
-
 
 
 def login_view(request):
