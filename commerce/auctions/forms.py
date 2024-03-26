@@ -1,4 +1,5 @@
 # custom module for my forms
+from .models import AuctionListing
 
 from django import forms
 
@@ -19,4 +20,7 @@ class NewListingForm(forms.Form):
     })
 
 class WatchlistForm(forms.Form):
-    boolswitch = forms.CharField(widget=forms.HiddenInput, initial="False")
+    button_action = forms.CharField(widget=forms.HiddenInput, required=False)
+    
+class BidForm(forms.Form):
+    bid = forms.IntegerField()

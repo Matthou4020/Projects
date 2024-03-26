@@ -4,8 +4,8 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import User, AuctionListing, Bid, Comment
-from .forms import *
+from .models import User, AuctionListing, Bid, Comment, WatchList
+from .forms import NewListingForm, WatchlistForm, BidForm
 
 def index(request):
         active_listings = AuctionListing.objects.all()
@@ -65,6 +65,7 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+
 @login_required
 def new_listing(request):
     if request.method == "GET":
@@ -79,63 +80,95 @@ def new_listing(request):
             starting_bid = form.cleaned_data["starting_bid"]
             imageurl = form.cleaned_data["image"]
             type = form.cleaned_data["type"]
-            current_user = request.user            
+            current_user = request.user          
             new_listing = AuctionListing(title=title, 
                                      description=description,
                                      startingbid=starting_bid,
                                      imageurl=imageurl,
                                      type=type,
-                                     user=current_user
+                                     user=current_user,
+                                     highestbid=starting_bid
             )
             new_listing.save()
+    
     else:
         form = NewListingForm()
 
     return HttpResponseRedirect(reverse("index"))
 
+
 def listing(request, listing):
     current_listing = AuctionListing.objects.get(title=listing)
     watchlistform = WatchlistForm()
+    bidform = BidForm()
+    highestbid = current_listing.highestbid
+    user = request.user
+    watchlist = WatchList.objects.filter(listing=current_listing)
     if request.method == "GET":
-        onwatchlist = current_listing.onwatchlist
         return render(request, "auctions/listing.html", {
             "listing": current_listing,
             "watchlistform": watchlistform,
-            "onwatchlist": onwatchlist
+            "bidform": bidform,
+            "highestbid":highestbid,
+            "watchlist": watchlist
         })
-    
+
     if request.method == "POST":
-        button_value = request.POST.get('button_value')
-        if button_value == 'added':
-            current_listing.onwatchlist = True
-        
-        elif button_value == 'deleted':
-           current_listing.onwatchlist = False
+        form = BidForm(request.POST)
+        if form.is_valid():
+            amount = form.cleaned_data["bid"]
+            if amount <= current_listing.highestbid:
+                raise ValueError("Bid amount must be greater than the starting bid.")
+            user = request.user
+            bid = Bid(user=user, amount=amount, listing=current_listing)
+            bid.save()
+            current_listing.highestbid = amount
+            highestbid = amount
+            current_listing.save()
+            return HttpResponseRedirect(listing)
 
-        onwatchlist = current_listing.onwatchlist
-        current_listing.save()
-        return render(request, "auctions/listing.html", {
-            "listing": current_listing,
-            "watchlistform": watchlistform,
-            "onwatchlist": onwatchlist
-        })
+        form = WatchlistForm(request.POST)
+        button_action = request.POST.get("button_action")
+        if button_action == "add_watchlist":
+            new_watchlist = WatchList.objects.create(listing=current_listing, user=user)
+            new_watchlist.save()
+        elif button_action == "remove_watchlist":
+            WatchList.objects.get(listing=current_listing).delete()
+        return HttpResponseRedirect(listing)
 
-
+    return render(request, "auctions/listing.html", {
+        "listing": current_listing,
+        "bidform": bidform,
+        "watchlistform": watchlistform,
+        "highestbid": highestbid
+    })
 
 @login_required
 def watchlist(request):
+    current_user = request.user
+    watchlist = WatchList.objects.filter(user=current_user)
     if request.method == "GET":
-        current_user = request.user
-        watchlist = AuctionListing.objects.filter(user=current_user, onwatchlist=True)
         watchlistform = WatchlistForm()
         return render (request, "auctions/watchlist.html",{
             "watchlist": watchlist,
             "watchlistform": watchlistform
         })
+    
     if request.method == "POST":
         form = request.POST.get("button_value")
-        title = form
-        listing = AuctionListing.objects.get(title=title)
-        listing.onwatchlist = False
-        listing.save()
-        return render(request, "auctions/watchlist.html")
+        if form:
+            WatchList.objects.filter(id=form).delete()
+            return HttpResponseRedirect("watchlist")
+        else:
+            return HttpResponseRedirect("")
+
+def categories(request):
+    return
+    # get categories' list
+    # get listings with that category => filter
+    # categories = 
+    # listings = 
+    # return render (request, "categories.html", {
+        # "listings":listings
+       # "categories":categories 
+   # })

@@ -5,17 +5,24 @@
  <img src="{{listing.imageurl}}" alt="listing image">
  <h4>Starting bid:</h4>
     <p>{{listing.startingbid}}</p>
+    <h4>Current Highest Bid:</h4>
+    <p>{{ highestbid }}</p>
+
     {% if user.is_authenticated %}
+    <form action="{% url 'listing' listing.title %}" method="post">
+        {% csrf_token %}
+        {{ bidform }}
+    </form>
     
     <form action="{% url 'listing' listing.title %}" method="post">   
         {% csrf_token %}
         {{ watchlistform }}
-        <input type="hidden" name="button_value" value="{% if onwatchlist %}deleted{% else %}added{% endif %}">
-        {% if onwatchlist %}
-            <button type="submit" value="added">Delete from watchlist</button>
+        {% if watchlist %}
+            <button type="submit" name="button_action" value="remove_watchlist">Remove from Watchlist</button>
         {% else %}
-            <button type="submit" value="deleted">Add to watchlist</button>
+            <button type="submit" name="button_action" value="add_watchlist">Add to Watchlist</button>
         {% endif %}
     </form>
+    
         {% endif %}
 {% endblock %}

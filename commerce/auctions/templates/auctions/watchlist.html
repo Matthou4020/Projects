@@ -6,13 +6,13 @@
     <h2>Your watched lists</h2>
     <ul>
         {% if watchlist %}
-        {% for listing in watchlist %}
-            <li><a href="{{listing.title}}">{{listing.title}}</a></li>
+        {% for entry in watchlist %}
+            <li><a href="{{entry.listing.title}}">{{entry.listing.title}}</a></li>
             <span>
                 <form action="{% url 'watchlist' %}" method="post">
                     {% csrf_token %}
                     {{watchlistform}}
-                    <input type="hidden" name="button_value" value="{{listing.title}}">
+                    <input type="hidden" name="button_value" value="{{entry.id}}">
                     <button type="submit" value="deleted">Delete from watchlist</button>
                 </form>
             </span>

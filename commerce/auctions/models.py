@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.forms import ValidationError
 
 
 class User(AbstractUser): 
@@ -9,10 +10,11 @@ class AuctionListing(models.Model):
     title = models.CharField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user", null=True, default=None)
     description = models.CharField(max_length=100)
-    startingbid = models.IntegerField()
+    startingbid = models.IntegerField(default=0)
     imageurl = models.URLField()
     type = models.CharField(max_length=20)
-    onwatchlist = models.BooleanField(default=False)
+    highestbid = models.IntegerField(default=0)
+    # category = models.CharField()
     # Date of issue
     # End date
 
@@ -21,12 +23,9 @@ class AuctionListing(models.Model):
 
 class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
-    amount = models.IntegerField()#min and max
+    amount = models.IntegerField()
     listing = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, related_name="bids" )
 
-    class Meta:
-        db_table = 'auctions_bid'
-        
     def __str__(self): 
         return f"bid of {self.amount} by {self.user} on {self.listing.title}"
 
@@ -37,4 +36,11 @@ class Comment(models.Model):
 
     def __str__(self): 
         return f"{self.text} by {self.user} on {self.listing.title}"
+    
+class WatchList(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlists")
+    listing = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, related_name="watchlists")
 
+    def clean(self):
+        if WatchList.objects.filter(user=self.user, listing=self.listing).exists():
+            raise ValidationError('This listing is already in the user\'s watchlist.')
