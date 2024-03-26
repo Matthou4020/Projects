@@ -202,12 +202,19 @@ def watchlist(request):
             return HttpResponseRedirect("")
 
 def categories(request):
-    return
-    # get categories' list
-    # get listings with that category => filter
-    # categories = 
-    # listings = 
-    # return render (request, "categories.html", {
-        # "listings":listings
-       # "categories":categories 
-   # })
+    auctionlistings = AuctionListing.objects.all()
+    categories = set()
+    for listing in auctionlistings:
+        categories.add(listing.type)
+    
+    
+    return render (request, "auctions/categories.html", {
+        "categories":categories,
+    })
+ 
+def category(request, category):
+    listings = AuctionListing.objects.filter(type=category)
+    return render(request, "auctions/category.html", {
+        "listings":listings
+
+    })
