@@ -27,3 +27,7 @@ class BidForm(forms.Form):
 
 class DeleteForm(forms.Form):
     button_action = forms.CharField(widget=forms.HiddenInput, required=False)
+
+class AddComment(forms.Form):
+    text = forms.CharField()
+    button_action = forms.CharField(widget=forms.HiddenInput, required=False)

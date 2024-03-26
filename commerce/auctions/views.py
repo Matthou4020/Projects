@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from .models import User, AuctionListing, Bid, Comment, WatchList, AuctionWinner
-from .forms import NewListingForm, WatchlistForm, BidForm, DeleteForm
+from .forms import NewListingForm, WatchlistForm, BidForm, DeleteForm, AddComment
 from django.core.exceptions import ObjectDoesNotExist
 
 def index(request):
@@ -106,6 +106,13 @@ def listing(request, listing):
     user = request.user
     watchlist = WatchList.objects.filter(listing=current_listing)
     listing_owner = AuctionListing.objects.get(title=listing).user
+    addcomment = AddComment()
+
+    try:
+        comments = Comment.objects.filter(listing=current_listing)
+    except ObjectDoesNotExist:
+        pass
+
     try:
         winner = AuctionWinner.objects.get(listing=current_listing)
         if winner:
@@ -117,7 +124,6 @@ def listing(request, listing):
                 return render(request, "auctions/listingover.html")
     except ObjectDoesNotExist:
         pass
-
     if listing_owner == user:
         owner = True
     else:
@@ -129,7 +135,9 @@ def listing(request, listing):
             "bidform": bidform,
             "highestbid":highestbid,
             "watchlist": watchlist,
-            "owner": owner
+            "owner": owner,
+            "comments":comments,
+            "addcomment":addcomment
         })
 
     if request.method == "POST":
@@ -162,8 +170,16 @@ def listing(request, listing):
             new_watchlist.save()
         elif button_action == "remove_watchlist":
             WatchList.objects.get(listing=current_listing).delete()
-        return HttpResponseRedirect(listing)
 
+        form = AddComment(request.POST)
+        if form.is_valid():
+            button_action = form.cleaned_data["button_action"]
+            if button_action == "add_comment":
+                text = form.cleaned_data["text"]         
+                newcomment = Comment.objects.create(text=text, user=user, listing=current_listing)
+                newcomment.save()
+        
+        return HttpResponseRedirect(listing)
     return HttpResponseRedirect(listing)
 
 @login_required

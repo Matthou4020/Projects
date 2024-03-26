@@ -31,5 +31,19 @@
         {% endif %}
     </form>
     
-        {% endif %}
+    <h3>New comment</h3>
+    <form action="{% url 'listing' listing.title %}" method="post">
+        {% csrf_token %}
+        {{addcomment}}
+        <button type="submit" name="button_action" value="add_comment">Add comment</button>
+    </form>
+    {% endif %}
+
+    <h3>Comments</h3>
+    {% for comment in comments %}
+    <h4>{{comment.user}}</h4>
+    <p>{{comment.text}}</p>
+    <hr>
+    {% endfor %}
+        
 {% endblock %}
