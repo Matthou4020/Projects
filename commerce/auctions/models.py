@@ -14,6 +14,7 @@ class AuctionListing(models.Model):
     imageurl = models.URLField()
     type = models.CharField(max_length=20)
     highestbid = models.IntegerField(default=0)
+    won = models.BooleanField(default=False)
     # category = models.CharField()
     # Date of issue
     # End date
@@ -44,3 +45,7 @@ class WatchList(models.Model):
     def clean(self):
         if WatchList.objects.filter(user=self.user, listing=self.listing).exists():
             raise ValidationError('This listing is already in the user\'s watchlist.')
+
+class AuctionWinner(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="winners")
+    listing = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, related_name="winners")

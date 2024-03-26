@@ -4,11 +4,12 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import User, AuctionListing, Bid, Comment, WatchList
-from .forms import NewListingForm, WatchlistForm, BidForm
+from .models import User, AuctionListing, Bid, Comment, WatchList, AuctionWinner
+from .forms import NewListingForm, WatchlistForm, BidForm, DeleteForm
+from django.core.exceptions import ObjectDoesNotExist
 
 def index(request):
-        active_listings = AuctionListing.objects.all()
+        active_listings = AuctionListing.objects.filter(won=False)
         return render(request, "auctions/index.html", {
             "auctionlistings": active_listings
         })
@@ -104,16 +105,43 @@ def listing(request, listing):
     highestbid = current_listing.highestbid
     user = request.user
     watchlist = WatchList.objects.filter(listing=current_listing)
+    listing_owner = AuctionListing.objects.get(title=listing).user
+    try:
+        winner = AuctionWinner.objects.get(listing=current_listing)
+        if winner:
+            if user == winner.user:
+                return render(request, "auctions/winner.html", {
+                    "listing":current_listing
+                })
+            else:
+                return render(request, "auctions/listingover.html")
+    except ObjectDoesNotExist:
+        pass
+
+    if listing_owner == user:
+        owner = True
+    else:
+        owner = False
     if request.method == "GET":
         return render(request, "auctions/listing.html", {
             "listing": current_listing,
             "watchlistform": watchlistform,
             "bidform": bidform,
             "highestbid":highestbid,
-            "watchlist": watchlist
+            "watchlist": watchlist,
+            "owner": owner
         })
 
     if request.method == "POST":
+        form = DeleteForm(request.POST)
+        button_action = request.POST.get("button_action")
+        if button_action == "end_listing":
+            current_listing.won = True
+            current_listing.save()
+            winningbid = Bid.objects.get(amount=current_listing.highestbid)
+            winner = winningbid.user
+            AuctionWinner.objects.create(user=winner, listing=current_listing)
+        
         form = BidForm(request.POST)
         if form.is_valid():
             amount = form.cleaned_data["bid"]
@@ -136,12 +164,7 @@ def listing(request, listing):
             WatchList.objects.get(listing=current_listing).delete()
         return HttpResponseRedirect(listing)
 
-    return render(request, "auctions/listing.html", {
-        "listing": current_listing,
-        "bidform": bidform,
-        "watchlistform": watchlistform,
-        "highestbid": highestbid
-    })
+    return HttpResponseRedirect(listing)
 
 @login_required
 def watchlist(request):

@@ -24,3 +24,6 @@ class WatchlistForm(forms.Form):
     
 class BidForm(forms.Form):
     bid = forms.IntegerField()
+
+class DeleteForm(forms.Form):
+    button_action = forms.CharField(widget=forms.HiddenInput, required=False)
