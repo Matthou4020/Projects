@@ -68,15 +68,36 @@ function load_mailbox(mailbox) {
     fetch('/emails/inbox')
     .then(response => response.json())
     .then(emails => {
-      const subject = emails[0].subject;
-      const sender = emails[0].sender;
-      const timestamp = emails[0].timestamp;
-      const element = document.createElement('div');
-      element.innerHTML = `${timestamp} Subject: ${subject}. From: ${sender}`
-      element.addEventListener('click', function() {
-      console.log("You have clicked on this")
-      })
-    document.querySelector('#emails-view').append(element);
+      for (let i = 0; i < emails.length; i++) {
+        const subject = emails[i].subject;
+        const sender = emails[i].sender;
+        const timestamp = emails[i].timestamp;
+        const read = emails[i].read;
+        const id = emails[i].id;
+        const element = document.createElement('div');
+        element.id = id
+        element.innerHTML = `${timestamp} Subject: ${subject}. From: ${sender}`
+        if (read) {
+          element.style.backgroundColor = 'lightgray';
+        }
+        const emailsview = document.querySelector('#emails-view')
+        emailsview.append(element);
+        
+        element.addEventListener('click', function() {
+          fetch(`/emails/${element.id}`)
+          .then(response => response.json())
+          .then(email => {
+            //PUT REQUEST FOR READ
+            console.log(email.read)
+            const subject = email.subject
+            const sender = email.sender
+            const timestamp = email.timestamp
+            const body = email.body
+            element.style.backgroundColor = 'white'
+
+          })
+        }
+      )}
   });
   }
   //{
