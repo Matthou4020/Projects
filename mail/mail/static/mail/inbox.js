@@ -60,7 +60,7 @@ function load_mailbox(mailbox) {
     fetch('/emails/archive')
     .then(response => response.json())
     .then(emails => {
-      console.log(emails);
+    console.log(emails);
     })
   }
 
@@ -68,7 +68,7 @@ function load_mailbox(mailbox) {
     fetch('/emails/inbox')
     .then(response => response.json())
     .then(emails => {
-      console.log(emails);
+    console.log(emails);
     })
   }
 
@@ -76,7 +76,7 @@ function load_mailbox(mailbox) {
     fetch('/emails/sent')
     .then(response => response.json())
     .then(emails => {
-      console.log(emails);
+    console.log(emails);
     })
   }
 };
