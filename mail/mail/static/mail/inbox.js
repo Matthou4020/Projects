@@ -68,9 +68,27 @@ function load_mailbox(mailbox) {
     fetch('/emails/inbox')
     .then(response => response.json())
     .then(emails => {
-    console.log(emails);
-    })
+      const subject = emails[0].subject;
+      const sender = emails[0].sender;
+      const timestamp = emails[0].timestamp;
+      const element = document.createElement('div');
+      element.innerHTML = `${timestamp} Subject: ${subject}. From: ${sender}`
+      element.addEventListener('click', function() {
+      console.log("You have clicked on this")
+      })
+    document.querySelector('#emails-view').append(element);
+  });
   }
+  //{
+    //"id": 100,
+    //"sender": "foo@example.com",
+    //"recipients": ["bar@example.com"],
+    //"subject": "Hello!",
+    //"body": "Hello, world!",
+    //"timestamp": "Jan 2 2020, 12:00 AM",
+    //"read": false,
+    //"archived": false
+//}
 
   if (mailbox === 'sent') {
     fetch('/emails/sent')
