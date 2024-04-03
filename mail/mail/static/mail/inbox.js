@@ -47,11 +47,41 @@ function compose_email() {
 };
 
 
+function display_mail(mail) {
+  document.querySelector('#compose-view').style.display = 'none';
+  document.querySelector('#emails-view').style.display = 'none';
+  emails_view = document.querySelector('#display-mail')
+  emails_view.style.display = 'block'
+  const subject = mail.subject;
+  const sender = mail.sender;
+  const timestamp = mail.timestamp;
+  const body = mail.body;
+
+  if (document.querySelector('#header')) {
+  header.innerHTML = `Subject: ${subject}. ${sender}${timestamp}`;
+  paragraph.innerHTML = `${body}`;
+}
+else {
+  const header = document.createElement('h4');
+  header.innerHTML = `Subject: ${subject}. ${sender}${timestamp}`;
+  header.id = "header"
+  const paragraph = document.createElement('p');
+  paragraph.innerHTML = `${body}`;
+  emails_view.append(header, paragraph);
+}
+
+  
+
+  
+
+}
+
 function load_mailbox(mailbox) {
   
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
+  document.querySelector('#display-mail').style.display = 'none'
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
@@ -87,14 +117,15 @@ function load_mailbox(mailbox) {
           fetch(`/emails/${element.id}`)
           .then(response => response.json())
           .then(email => {
-            //PUT REQUEST FOR READ
-            console.log(email.read)
-            const subject = email.subject
-            const sender = email.sender
-            const timestamp = email.timestamp
-            const body = email.body
             element.style.backgroundColor = 'white'
+            display_mail(email)
 
+            fetch(`/emails/${email.id}`, {
+              method: 'PUT',
+              body: JSON.stringify({
+                  read: true
+              })
+            })
           })
         }
       )}
