@@ -31,10 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
       load_mailbox('sent');
       return false
     }
-  });
   
   
-function compose_email() {
+function compose_email(mail) {
 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
@@ -47,6 +46,12 @@ function compose_email() {
   document.querySelector('#compose-recipients').value = '';
   document.querySelector('#compose-subject').value = '';
   document.querySelector('#compose-body').value = '';
+
+  if (mail.id) {
+  document.querySelector('#compose-recipients').value = mail.sender;
+  document.querySelector('#compose-subject').value = `Re: ${mail.subject}`;
+  document.querySelector('#compose-body').value = `On ${mail.timestamp},${mail.sender} wrote:\n ${mail.body}`;
+  }
 };
 
 
@@ -55,40 +60,75 @@ function display_mail(mail) {
   document.querySelector('#emails-view').style.display = 'none';
   emails_view = document.querySelector('#display-mail')
   emails_view.style.display = 'block'
+
   const subject = mail.subject;
   const sender = mail.sender;
   const timestamp = mail.timestamp;
   const body = mail.body;
+  
+  let header = document.querySelector('#header');
+  let paragraph = document.querySelector('#paragraph');
 
-  if (document.querySelector('#header') && document.querySelector('#paragraph')) {
-  header.innerHTML = `Subject: ${subject}. ${sender}${timestamp}`;
-  paragraph.innerHTML = `${body}`;
-  }
-  else {
+  if (!header || !paragraph) {
+
+    // Add header
     const header = document.createElement('h4');
     header.innerHTML = `Subject: ${subject}. ${sender}${timestamp}`;
     header.id = "header"
+    emails_view.append(header)
+
+    // Add body
     const paragraph = document.createElement('p');
     paragraph.innerHTML = `${body}`;
     paragraph.id = "paragraph"
-    emails_view.append(header, paragraph);
-    const archive = document.createElement('button');
-    archive.className = "btn btn-sm btn-outline-secondary";
-    archive.id = "archive";
-    archive.innerHTML = "Archive";
-    emails_view.append(archive);
+    emails_view.append(paragraph)
+  }
   
-    archive.addEventListener('click', () => {
-      fetch(`/emails/${mail.id}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-          archived: true
+  // Update paragraph and header content
+  else {
+  header.innerHTML = `Subject: ${subject}. ${sender}${timestamp}`;
+  paragraph.innerHTML = `${body}`
+  }
+
+  let reply = document.querySelector("#reply");
+  let archive = document.querySelector("#archive");
+
+  if (!reply) {
+
+  // Add reply button
+  reply = document.createElement('button');
+  reply.className = "btn btn-sm btn-outline-secondary";
+  reply.id = "reply";
+  reply.innerHTML = "Reply";
+  emails_view.append(reply);
+  reply.addEventListener('click', () => {
+    compose_email(mail)
+    });
+  }
+  if (!archive) {
+  // Add archive button
+  archive = document.createElement('button');
+  archive.className = "btn btn-sm btn-outline-secondary";
+  archive.id = "archive";
+  archive.innerHTML = "Archive";
+  emails_view.append(archive);
+  archive.addEventListener('click', () => {
+  fetch(`/emails/${mail.id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      archived: true
     })
   });
   load_mailbox('inbox')
   });
   }
-}
+  }
+  
+
+
+ 
+
+
 
 function load_mailbox(mailbox) {
   
@@ -102,11 +142,11 @@ function load_mailbox(mailbox) {
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
   
-  //I STILL NEED TO CLEAR INSTANCES OF ARCHIVED MAILS WHEN I CLICK THE BUTTON
+  // I STILL NEED TO CLEAR INSTANCES OF ARCHIVED MAILS WHEN I CLICK THE BUTTON
+  // AND ACTUALIZE THE INBOX IF I ARCHIVED A MAIL
   // AT THE MOMENT, WITHIN THE SAME SESSION, ARCHIVED ITEMS STAY ON THE PAGE
   // BECAUSE NO REFRESH
   // ALSO CHECK THE CSS COHERENCE.
-  // ALSO, USERS SHOULD BE ABLE TO ACCESS A VIEW OF THEIR SENT MAILS. DO I CARE THOUGH?
   if (mailbox === 'archive') {
     document.querySelector('#archives').style.display = 'block'
     fetch('/emails/archive')
@@ -119,7 +159,7 @@ function load_mailbox(mailbox) {
       const timestamp = emails[i].timestamp;
       const element = document.createElement('div');
       element.innerHTML = `${timestamp} Subject: ${subject}. From: ${sender}`
-      
+      element.className = "mail_list"
       const archived = document.querySelector('#archives')
       archives.append(element);
       const restore = document.createElement('button');
@@ -152,6 +192,7 @@ function load_mailbox(mailbox) {
           const id = emails[i].id;
           const element = document.createElement('div');
           element.id = id
+          element.className = "mail_list"
           element.innerHTML = `${timestamp} Subject: ${subject}. From: ${sender}`
           if (read) {
             element.style.backgroundColor = 'lightgray';
@@ -176,6 +217,7 @@ function load_mailbox(mailbox) {
            ) })
           }}
            )}
+
   if (mailbox === 'sent') {
     document.querySelector('#sent_view').style.display = 'block'
     
@@ -190,10 +232,11 @@ function load_mailbox(mailbox) {
         const element = document.createElement('div');
         element.innerHTML = `${timestamp} Subject: ${subject}. To: ${recipients}`
         element.id = "sent_email"
+        element.className = "mail_list"
         const sent_view = document.querySelector('#sent_view')
         sent_view.append(element);
     }
   })}
 };
 }
-
+});

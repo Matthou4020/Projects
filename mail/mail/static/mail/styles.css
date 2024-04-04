@@ -2,7 +2,7 @@ textarea {
     min-height: 400px;
 }
 
-#emails-view div {
+.mail_list {
     border: 1px solid black;
     padding-left: 10px;
 }
