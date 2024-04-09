@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
+from django.utils import timezone
 
 from .forms import PostForm
 from .models import User, Post
@@ -12,23 +13,23 @@ from .models import User, Post
 def index(request):
     if request.method == 'GET':
         postform = PostForm()
+        posts = Post.objects.order_by("-creation_date", "-creation_time")  
         return render(request, "network/index.html",{
-            "postform":postform
+            "postform":postform,
+            "recent_posts":posts
         })
     
     if request.method == 'POST':
         form = PostForm(request.POST)
         user = request.user
         if form.is_valid():
-            post_title = form.cleaned_data['title']
             post_content = form.cleaned_data['content']
-            post = Post(title=post_title, content=post_content, user=user)
+            post = Post(content=post_content,
+                        user=user)
             post.save()
             return HttpResponseRedirect(reverse("index"))
-        else:
-            postform = PostForm()
         return render(request, "network/index.html", {
-            'postform': postform
+            'postform': form
         })
 
 
