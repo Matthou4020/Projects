@@ -83,3 +83,13 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+def profile(request, username):
+    user = request.user
+    posts = Post.objects.filter(user=user).order_by("-creation_date")  
+
+    return render(request, f"network/profile.html", {
+        "username":username,
+        "posts": posts,
+        "user":user
+    })

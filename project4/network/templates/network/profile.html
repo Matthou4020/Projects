@@ -1,0 +1,18 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+<div class="container-fluid">
+    
+    <h1>{{username}}
+    {% if username != user.username %}
+    <button class="btn btn-primary">Follow</button>
+    {% endif %}
+    </h1>
+    <h3>Followers: 0</h3>
+    <h3>Follows: 0</h3>
+    <h3>Posts</h3>
+    {% for post in posts %}
+        <p>{{post}}</p>
+    {% endfor %}
+</div>
+{% endblock %}

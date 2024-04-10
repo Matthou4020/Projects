@@ -14,6 +14,7 @@
                 <form action="" method="post">
                 {{postform.user}}
                 {{postform.content}}
+            
                 {% csrf_token %}
                     <button type="submit" class="btn btn-primary mb-3" value="Submit">Post</button>
                 </form> 
@@ -24,11 +25,14 @@
             <div class="row justify-content-center text-left-aligned">
                 <div class="col-5 ms-0 ps-0">
                 <h5>{{post.user}}</h5>
+                <p>Posted on {{post.creation_date}}</p>
+                <p>At {{post.creation_time}}</p>
                 <p class="text-break">{{post.content}}</p>
+                <p>Likes:0</p>
                 </div> 
             </div>
         {% endfor %} 
 
     </div>
-    
+
 {% endblock %}

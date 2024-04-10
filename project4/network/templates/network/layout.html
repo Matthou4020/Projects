@@ -6,6 +6,7 @@
         <title>{% block title %}Social Network{% endblock %}</title>
         <link href="{% static 'network/node_modules/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
         <link href="{% static 'network/styles.css' %}" rel="stylesheet">
+        <script src="{% static 'network/network.js' %}"></script>
     </head>
     <body>
     
@@ -16,7 +17,7 @@
                 <ul class="navbar-nav mr-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><strong>{{ user.username }}</strong></a>
+                        <a class="nav-link" href="{{user.username}}"><strong>{{ user.username }}</strong></a>
                     </li>
                 {% endif %}
                 <li class="nav-item">
