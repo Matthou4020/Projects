@@ -1,10 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+import json
 
 from .forms import PostForm
 from .models import User, Post
@@ -12,11 +14,13 @@ from .models import User, Post
 
 def index(request):
     if request.method == 'GET':
+        user = request.user
         postform = PostForm()
         posts = Post.objects.order_by("-creation_date", "-creation_time")  
         return render(request, "network/index.html",{
             "postform":postform,
-            "recent_posts":posts
+            "recent_posts":posts,
+            "user":user
         })
     
     if request.method == 'POST':
@@ -84,12 +88,28 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
-def profile(request, username):
-    user = request.user
-    posts = Post.objects.filter(user=user).order_by("-creation_date")  
 
-    return render(request, f"network/profile.html", {
+def profile(request, username):
+    current_user = request.user
+    profile = User.objects.get(username=username)
+    posts = Post.objects.filter(user=profile).order_by("-creation_date")
+
+    return render(request, "network/profile.html", {
         "username":username,
         "posts": posts,
-        "user":user
+        "profile":profile,
+        "user":current_user
+        
     })
+
+@login_required
+def user(request, username):
+    current_user = request.user
+    user = User.objects.get(username=username)
+    if user:
+        follows = [user.username for user in current_user.follows.all()]
+        
+        data = {
+            "follows" : follows
+        }
+        return JsonResponse(data)

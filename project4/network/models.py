@@ -4,7 +4,10 @@ from django.utils import timezone
 
 
 class User(AbstractUser):
-    pass
+    follows = models.ManyToManyField('self', symmetrical=False, related_name='follower', blank=True)
+    
+    def __str__(self):
+        return self.username
 
 class Post(models.Model):
     content = models.TextField(max_length= 500)

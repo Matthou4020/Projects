@@ -3,11 +3,10 @@
 {% block body %}
 <div class="container-fluid">
     
-    <h1>{{username}}
+    <h1 id="user_profile">{{username}}</h1>
     {% if username != user.username %}
-    <button class="btn btn-primary">Follow</button>
+        <button id="toggle_button" class="btn btn-primary"></button>
     {% endif %}
-    </h1>
     <h3>Followers: 0</h3>
     <h3>Follows: 0</h3>
     <h3>Posts</h3>
