@@ -13,7 +13,7 @@ class Post(models.Model):
     content = models.TextField(max_length= 500)
     creation_date = models.DateField(default=timezone.now().date())
     creation_time = models.TimeField(default=timezone.now().time())
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
 
     def __str__(self):
         return f"""

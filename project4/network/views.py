@@ -100,8 +100,18 @@ def profile(request, username):
         "posts": posts,
         "profile":profile,
         "user":current_user
-        
     })
+
+
+@login_required
+def following(request):
+    current_user = request.user
+    follows_list = current_user.follows.all()
+
+    return render(request, "following.html", {
+        "follows_list":follows_list,
+    })
+
 
 @csrf_exempt
 @login_required
