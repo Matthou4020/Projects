@@ -17,7 +17,7 @@ class Post(models.Model):
 
     def __str__(self):
         return f"""
-                {self.content[:10]}
+                {self.content}
                 ... posted by {self.user}. 
                 Posted on {self.creation_date},
                 {self.creation_time.strftime('%H:%M:%S')}

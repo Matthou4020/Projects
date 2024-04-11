@@ -6,6 +6,7 @@ from django.urls import reverse
 from django import forms
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 import json
 
 from .forms import PostForm
@@ -102,14 +103,35 @@ def profile(request, username):
         
     })
 
+@csrf_exempt
 @login_required
 def user(request, username):
     current_user = request.user
-    user = User.objects.get(username=username)
-    if user:
-        follows = [user.username for user in current_user.follows.all()]
+    current_user = User.objects.get(username=current_user)
+
+    if request.method == 'GET':
+        user = User.objects.get(username=username)
+        if user:
+            follows = [user.username for user in current_user.follows.all()]
+            data = {
+                "follows" : follows
+            }
+            return JsonResponse(data)
+    
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        action = data.get("action")
         
-        data = {
-            "follows" : follows
-        }
-        return JsonResponse(data)
+        if action == "follow":
+            new_follows = data.get("follows")
+            new_follows_id = User.objects.get(username=new_follows).id
+            current_user.follows.add(new_follows_id)
+            current_user.save()
+            return JsonResponse({"message": "user succesfully added to the followed list"})
+        
+        elif action == "unfollow":
+            follows = data.get("follows")
+            follows_id = User.objects.get(username=follows).id
+            current_user.follows.remove(follows_id)
+            current_user.save()
+            return JsonResponse({"message": "Succesfully deleted the user from the followed list"})
