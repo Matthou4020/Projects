@@ -22,3 +22,9 @@ class Post(models.Model):
                 Posted on {self.creation_date},
                 {self.creation_time.strftime('%H:%M:%S')}
                 """
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="likes")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
+
+    def __str__(self):
+        return f"{self.user} liked {self.post}"

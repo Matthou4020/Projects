@@ -124,7 +124,7 @@ def following(request):
     current_user = request.user
     follows_list = current_user.follows.all()
 
-    return render(request, "following.html", {
+    return render(request, "network/following.html", {
         "follows_list":follows_list,
     })
 
