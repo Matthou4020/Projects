@@ -30,8 +30,7 @@
                     {% if user == post.user %}
                         <button data-user-id="{{post.user.id}}" class="btn btn-outline-primary btn-sm">Edit</button>
                     {% endif %}  
-                      
-                    <p>Likes:0</p>
+                        <button data-user-id="{{user.id}}" data-post-id="{{post.id}}" class="like_button"></button><span></span>
                 </div> 
             </div>
         {% endfor %} 

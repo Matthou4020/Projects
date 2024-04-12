@@ -119,6 +119,69 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log(data);
                 });
             }
-        });
+        });  
     };
+
+    if (document.querySelector('.like_button')) {
+        const likeButtons = document.querySelectorAll('.like_button')
+        likeButtons.forEach(function(likeButton) {
+            const userId = likeButton.dataset.userId;
+            const postId = likeButton.dataset.postId;
+            const span = likeButton.nextElementSibling
+            fetch('/posts', {
+                method:'POST',
+                body: JSON.stringify({
+                    user_id:userId,
+                    post_id:postId
+                })
+            })
+            .then (response => response.json())
+            .then (data => {
+                span.innerHTML = data.likeCount
+                const hasLiked = data.hasLiked
+                console.log(hasLiked)
+                if (hasLiked === true) {
+                    likeButton.innerHTML = 'Unlike'
+                } else {
+                    likeButton.innerHTML = 'Like'
+                }
+            })
+            
+            likeButton.addEventListener('click', () => {
+                if (likeButton.innerHTML === 'Like') {
+                    likeButton.innerHTML = 'Unlike';
+                    fetch('/posts', {
+                        method:'POST',
+                        body: JSON.stringify({
+                            action:"like",
+                            user_id:userId,
+                            post_id:postId
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        span.innerHTML = data.actualizedCount,
+                        console.log(data)
+                        
+                    });
+                } else {
+                    likeButton.innerHTML = 'Like';
+                    fetch('/posts', {
+                        method:'POST',
+                        body:  JSON.stringify({
+                            action:"unlike",
+                            user_id:userId,
+                            post_id:postId
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        span.innerHTML = data.actualizedCount,
+                        console.log(data)
+                        
+                    });
+                }
+            })
+        })
+    }
 });

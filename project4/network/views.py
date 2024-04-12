@@ -9,49 +9,56 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.core.paginator import Paginator
+from django.core.exceptions import ObjectDoesNotExist
+
 
 from .forms import PostForm
-from .models import User, Post
+from .models import User, Post, Like
 
 
 def index(request):
-    posts = Post.objects.order_by("-creation_date", "-creation_time")  
-    paginator = Paginator(posts, 10)
-    pages_total = paginator.count
+    
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
 
-    
-    if request.GET.get('ajax') == 'True':
-        data = json.loads(request.body)
-        page_number = data.get("page_number")
-        return JsonResponse({"message":"page number received"})
-    
-    if request.method == 'GET':
-        user = request.user
-        postform = PostForm()
-        page_number = request.GET.get("page_number", 1)
+    if request.user.is_authenticated:
+        posts = Post.objects.order_by("-creation_date", "-creation_time") 
+        paginator = Paginator(posts, 10)
+        pages_total = paginator.count
 
-        return render(request, "network/index.html",{
-            "postform":postform,
-            "recent_posts":paginator.page(page_number),
-            "user":user,
-            "paginator":paginator,
-            "pages_total":pages_total,
-        })
-    
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        user = request.user
-        if form.is_valid():
-            post_content = form.cleaned_data['content']
-            post = Post(content=post_content,
-                        user=user)
-            post.save()
-            return HttpResponseRedirect(reverse("index"))
-        return render(request, "network/index.html", {
-            'postform': form
-        })
-    
-    return HttpResponseRedirect(reverse("index"))
+        
+        if request.GET.get('ajax') == 'True':
+            data = json.loads(request.body)
+            page_number = data.get("page_number")
+            return JsonResponse({"message":"page number received"})
+        
+        if request.method == 'GET':
+            user = request.user
+            postform = PostForm()
+            page_number = request.GET.get("page_number", 1)
+
+            return render(request, "network/index.html",{
+                "postform":postform,
+                "recent_posts":paginator.page(page_number),
+                "user":user,
+                "paginator":paginator,
+                "pages_total":pages_total,
+            })
+        
+        if request.method == 'POST':
+            form = PostForm(request.POST)
+            user = request.user
+            if form.is_valid():
+                post_content = form.cleaned_data['content']
+                post = Post(content=post_content,
+                            user=user)
+                post.save()
+                return HttpResponseRedirect(reverse("index"))
+            return render(request, "network/index.html", {
+                'postform': form
+            })
+        
+        return HttpResponseRedirect(reverse("index"))
 
 
 def login_view(request):
@@ -167,16 +174,18 @@ def user(request, username):
 @login_required
 @csrf_exempt
 def posts(request):
+    if request.method == "GET":
+        likes = Like.objects.all()
+        data = {
+            likes:likes
+        }
+
+
     if request.method == "PUT":
         data = json.loads(request.body)
-        print(data)
         user_id = data.get("user_id")
-        print(user_id)
         previous_content = data.get("previous_content")
-        print(previous_content)
-        edited_content = data.get("edited_content")
-        print(edited_content)
-        
+        edited_content = data.get("edited_content")        
         previous_post = Post.objects.get(content=previous_content)
         
         if previous_content == edited_content:
@@ -185,3 +194,40 @@ def posts(request):
         previous_post.content = edited_content
         previous_post.save()
         return HttpResponse(status=204)
+    
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user_id = data.get("user_id")
+        print(user_id)
+        post_id = data.get("post_id")
+        action = data.get("action")
+        print(action)
+
+        if action == "like": 
+            like = Like.objects.create(user_id=user_id, post_id=post_id)
+            like.save()
+            actualized_count = Like.objects.filter(post_id=post_id).count()
+            return JsonResponse({"message":f"post succesfully liked",
+                                 "actualizedCount":f"{actualized_count}"})
+            
+        if action =="unlike":
+            like = Like.objects.get(post_id=post_id)
+            like.delete()
+            actualized_count = Like.objects.filter(post_id=post_id).count()
+            return JsonResponse({"message":f"post succesfully unliked",
+                                 "actualizedCount":f"{actualized_count}"})
+        
+        like_count = Like.objects.filter(post_id=post_id).count()
+
+        try:
+            Like.objects.get(user_id=user_id, post_id=post_id)
+            has_liked = True
+        except ObjectDoesNotExist:
+            has_liked = False
+        
+        print(has_liked)
+        return JsonResponse ({
+            'hasLiked':has_liked,
+            'likeCount':like_count
+        })
+
