@@ -8,20 +8,34 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.core.paginator import Paginator
 
 from .forms import PostForm
 from .models import User, Post
 
 
 def index(request):
+    posts = Post.objects.order_by("-creation_date", "-creation_time")  
+    paginator = Paginator(posts, 10)
+    pages_total = paginator.count
+
+    
+    if request.GET.get('ajax') == 'True':
+        data = json.loads(request.body)
+        page_number = data.get("page_number")
+        return JsonResponse({"message":"page number received"})
+    
     if request.method == 'GET':
         user = request.user
         postform = PostForm()
-        posts = Post.objects.order_by("-creation_date", "-creation_time")  
+        page_number = request.GET.get("page_number", 1)
+
         return render(request, "network/index.html",{
             "postform":postform,
-            "recent_posts":posts,
-            "user":user
+            "recent_posts":paginator.page(page_number),
+            "user":user,
+            "paginator":paginator,
+            "pages_total":pages_total,
         })
     
     if request.method == 'POST':
@@ -36,6 +50,8 @@ def index(request):
         return render(request, "network/index.html", {
             'postform': form
         })
+    
+    return HttpResponseRedirect(reverse("index"))
 
 
 def login_view(request):
@@ -89,7 +105,7 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
-
+@login_required
 def profile(request, username):
     current_user = request.user
     profile = User.objects.get(username=username)
@@ -145,3 +161,27 @@ def user(request, username):
             current_user.follows.remove(follows_id)
             current_user.save()
             return JsonResponse({"message": "Succesfully deleted the user from the followed list"})
+        
+
+
+@login_required
+@csrf_exempt
+def posts(request):
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        print(data)
+        user_id = data.get("user_id")
+        print(user_id)
+        previous_content = data.get("previous_content")
+        print(previous_content)
+        edited_content = data.get("edited_content")
+        print(edited_content)
+        
+        previous_post = Post.objects.get(content=previous_content)
+        
+        if previous_content == edited_content:
+            return HttpResponse(status=200)
+        
+        previous_post.content = edited_content
+        previous_post.save()
+        return HttpResponse(status=204)

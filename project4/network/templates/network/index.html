@@ -8,7 +8,7 @@
                 <h2>Home</h2>
             </div>
         </div>
-        <div class="row justify-content-center text-center mb-4 " >
+        <div id="new_post" class="row justify-content-center text-center mb-4 " >
             <div class="col-5 border">
                 <h3>New Post</h3>
                 <form action="" method="post">
@@ -24,17 +24,27 @@
         {% for post in recent_posts %}
             <div class="row justify-content-center text-left-aligned">
                 <div class="col-5 ms-0 ps-0">
-                <a href="{{post.user.username}}">
-                    <h5>{{post.user}}</h5>
-                </a>
-                <p>Posted on {{post.creation_date}}</p>
-                <p>At {{post.creation_time}}</p>
-                <p class="text-break">{{post.content}}</p>
-                <p>Likes:0</p>
+                    <a href="{{post.user.username}}"><h5 id="{{post.user}}">{{post.user}}</h5></a>
+                    <p>Posted: {{post.creation_date}} at {{post.creation_time}}</p>
+                    <span class="text-break">{{post.content}}</span>
+                    {% if user == post.user %}
+                        <button data-user-id="{{post.user.id}}" class="btn btn-outline-primary btn-sm">Edit</button>
+                    {% endif %}  
+                      
+                    <p>Likes:0</p>
                 </div> 
             </div>
         {% endfor %} 
 
+        <nav id="pagination">
+            <ul class="pagination justify-content-center">
+                
+              {% for page in paginator %}
+              <li id="{{page.number}}" class="page-item"><a class="page-link" href="{% url 'index' %}?page_number={{ page.number }}">{{page.number}}</a></li>
+              {% endfor %}
+   
+            </ul>
+          </nav>
     </div>
 
 {% endblock %}

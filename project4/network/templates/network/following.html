@@ -1,0 +1,13 @@
+{% extends "network/layout.html" %}
+{% block body %}
+    <div class="container-fluid">
+        {% for user in follows_list %}
+            <a href="{{user}}"><h5>{{user}}</h5></a>
+            {% for post in user.posts.all %}
+            <p>{{post.content}}</p>
+            {% endfor %}
+
+
+        {% endfor %}
+    </div>
+{% endblock %}

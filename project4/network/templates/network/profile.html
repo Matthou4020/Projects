@@ -11,7 +11,12 @@
     <h3>Follows: 0</h3>
     <h3>Posts</h3>
     {% for post in posts %}
-        <p>{{post}}</p>
+        <div>
+            <span>{{post.content}}</span>
+                {% if username == user.username %}
+                <button class="btn btn-outline-primary btn-sm">Edit</button>
+                {% endif %}
+        </div>
     {% endfor %}
 </div>
 {% endblock %}
