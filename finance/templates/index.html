@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block main %}
+
+<div class="mb-2 col-3">
+  <table class="table table-light table-hover table-sm table-bordered">
+  <div>
+    <th>Current Cash Balance
+      <td>{{ cash_balance | usd }}</td>
+    </th>
+    <tr>
+      <th>
+        Balance total
+      </th>
+      <td>{{ grand_total | usd }}</td>
+    </tr>
+      </table>
+      <script src="/static/scripts.js"></script>
+
+  </div>
+
+
+{% if has_shares %}
+<table class="table table-hover table-bordered">
+      <thead>
+        <tr>
+          <th scope="row">Stock</th>
+          <th scope="row">Holding value</th>
+          <th scope="row">Current price</th>
+          <th scope="row">Shares</th>
+          <th scope="row">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for item in combined %}
+          <tr>
+            <td>{{item.symbol}}</td>
+            <td>{{item.holding_value | usd}}</td>
+            <td>{{item.price | usd}}</td>
+            <td>{{item.share}}</td>
+            <td>
+              <button type="button" id="buybutton"
+              class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#transactionmodal">Buy</button>
+
+              <button type="button" id="sellbutton"
+              class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#transactionmodal">Sell</button>
+
+            </td>
+          </tr>
+        {% endfor %}
+        <div class="modal fade" id="transactionmodal">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modaltitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true"></span>
+              </div>
+
+              <div class="modal-body">
+                <form id="modalform" action="" method="POST" autocomplete="off">
+                  <label for="shares">Quantity</label>
+                  <input type="text" id="shares" name="shares" required>
+                  <div></div>
+                  <label for="symbol">Stock</label>
+                  <input type="text" id="symbol" name="symbol" required>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" id="modalconfirm" class="btn btn-primary">Confirm</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </tbody>
+    </table>
+  {% endif %}
+
+{% endblock %}
