@@ -22,7 +22,6 @@ Ebay-like website.
 ### Technologies
 Django(views, models, forms,..), Python, JavaScript, Bootstrap, CSS, HTML.
 
-
 ## Mail
 Single page app that simulates an e-mail inbox.
 
@@ -35,7 +34,7 @@ Single page app that simulates an e-mail inbox.
 - Deleting
 - Read/unread system
 
-### Technologies :
+### Technologies
 Django, JavaScript, API's, Bootstrap, CSS, HTML.
 
 
@@ -64,17 +63,31 @@ Encyclopedia page.
 - Markdown to HTML conversion
 
 ### Technologies
-Django(views, models, forms,..), HTML
+Django(views, models, forms,..), Python, CSS, HTML
 
 
 ## Search
 A front-end that replicate Google's homepage and advanced search.
 
-### Features :
+### Features
 - Search
 - Advanced search
 - Image search 
 - I'm Feeling Lucky
 
-### Technologies :
-Django, Bootstrap, CSS, HTML.
+### Technologies
+Django, Bootstrap, Python, CSS, HTML.
+
+
+## Finance
+An app to buys and sell stocks virtually.
+
+### Features
+- Login/Logout
+- Index with recap of current holding value and cash balance
+- Stock value lookup 
+- Stock purchase
+- History
+
+### technologies
+Flask, Bootstrap, Python, JavaScript, HTML, CSS.
