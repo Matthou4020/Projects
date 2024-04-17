@@ -6,19 +6,23 @@
     <div class="row m-1">
         <h1 id="user_profile">{{username}}</h1>
         
-        <div class="col">
-            {% if username != user.username %}
+        <div class="col-2">
+            <img class="img-fluid border-1" src="{{photo_url}}" alt="me">
+        </div>
+        <div class="col-4">
+            <h4>Followers: {{followers_count}} </h4>
+            <h4>Users followed: {{follows_count}}</h4>
+        {% if username != user.username %}
             <button id="toggle_button" class="btn btn-primary"></button>
         {% endif %}
         </div>
-            <h3>Followers: {{followers_count}} </h3>
-            <h3>Follows: {{follows_count}}</h3>
             <h3>Posts: {{posts.count}}</h3>
     </div>
 
     {% for post in posts %}
-        <div class="row ms-1 mb-3 border-bottom">
+        <div class="post-div row m-2 border-2 p-2 border-bottom">
             <span>
+                <div class="post-date">{{post.creation_date}}</div>
                 {% if username == user.username %}
                 <button class=" edit-button btn btn-outline-secondary btn-sm">Edit</button>
                 {% endif %}

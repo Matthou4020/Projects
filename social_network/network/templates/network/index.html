@@ -7,8 +7,8 @@
             <div class="col-5 ms-0 ps-0">
             </div>
         </div>
-        <div id="new_post" class="row justify-content-center text-center mb-4 " >
-            <div class="col-5 border mt-4">
+        <div class="row justify-content-center text-center mb-4 " >
+            <div id="new-post" class="col-5 border mt-4">
                 <h3>New Post</h3>
                 <form action="" method="post">
                 {{postform.user}}
@@ -21,8 +21,10 @@
         </div>
 
         {% for post in recent_posts %}
-            <div class="row justify-content-center text-left-aligned">
-                <div class=" post-div border-bottom col-5 ms-0 ps-0 pt-2 pb-3">
+            <div class="row justify-content-center text-left-aligned mb-2 border-2">
+                
+                <div class="img-div col-1"><img class="img-fluid rounded-circle" src="{{post.user.photo_url}}" alt=""></div>
+                <div class="post-div border-bottom col-4 ms-0 ps-2 pt-2 pb-3">
                     <a class="custom-link" href="{{post.user.username}}"><h5 id="{{post.user}}">{{post.user}}</h5></a>
                     <span class="post-date text-muted"> {{post.creation_date}}</span>
         
@@ -32,7 +34,8 @@
                     <p class="text-break mt-1 mb-1">{{post.content}}</p>
                      
                         <div>
-                            <button class="like_button btn btn-primary p-1 btn-sm" data-user-id="{{user.id}}" data-post-id="{{post.id}}"></button>
+                            <button class="like_button p-1 btn" data-user-id="{{user.id}}" data-post-id="{{post.id}}"></button>
+                            <span></span>
                             <span></span>
                         </div>
                 </div> 

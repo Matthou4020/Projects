@@ -144,17 +144,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 span.innerHTML = data.likeCount
                 const hasLiked = data.hasLiked
                 if (hasLiked === true) {
-                    likeButton.innerHTML = 'Liked'
-                    likeButton.style.backgroundColor = 'darkblue'
+                    likeButton.innerHTML = '<i class="bi bi-heart-fill"></i>'
+                   
                 } else {
-                    likeButton.innerHTML = 'Like'
+                    likeButton.innerHTML = '<i class="bi bi-heart"></i>'
                 }
             })
             
             likeButton.addEventListener('click', () => {
-                if (likeButton.innerHTML === 'Like') {
-                    likeButton.innerHTML = 'Liked';
-                    likeButton.style.backgroundColor = 'darkblue';
+                if (likeButton.innerHTML === '<i class="bi bi-heart"></i>') {
+                    likeButton.innerHTML = '<i class="bi bi-heart-fill"></i>';
+                  
                     fetch('/posts', {
                         method:'POST',
                         body: JSON.stringify({
@@ -168,8 +168,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         span.innerHTML = data.actualizedCount                        
                     });
                 } else {
-                    likeButton.innerHTML = 'Like';
-                    likeButton.style.backgroundColor = 'blue';
+                    likeButton.innerHTML = '<i class="bi bi-heart"></i>';
+                    
                     fetch('/posts', {
                         method:'POST',
                         body:  JSON.stringify({

@@ -5,6 +5,7 @@ from django.utils import timezone
 
 class User(AbstractUser):
     follows = models.ManyToManyField('self', symmetrical=False, related_name='follower', blank=True)
+    photo_url = models.URLField(default="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png")
     
     
     def __str__(self):

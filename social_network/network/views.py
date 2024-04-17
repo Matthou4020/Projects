@@ -120,6 +120,7 @@ def profile(request, username):
     posts_count = posts.count()
     follows_count = profile.follows.count()
     followers_count = profile.follower.count()
+    photo_url = profile.photo_url
 
     return render(request, "network/profile.html", {
         "username":username,
@@ -128,7 +129,8 @@ def profile(request, username):
         "user":current_user,
         "followers_count": followers_count,
         "follows_count": follows_count,
-        "posts_count": posts_count
+        "posts_count": posts_count,
+        "photo_url": photo_url
     })
 
 

@@ -3,7 +3,7 @@
     <div class="container-fluid text-center">
             {% for user in follows_list %}
             <div class="row">
-                <div class="col-12 border-bottom">
+                <div class="post-div col-12 border-bottom">
                     <a href="{{user}}" class="user-profile-link custom-link"><h5>{{user}}</h5></a>
                     {% for post in user.posts.all %}
                     <p>{{post.content}}</p>

@@ -5,15 +5,15 @@
     <head>
         <title>{% block title %}Social Network{% endblock %}</title>
         <link href="{% static 'network/node_modules/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
         <link href="{% static 'network/styles.css' %}" rel="stylesheet">
         <script src="{% static 'network/network.js' %}"></script>
     </head>
     <body>
     
-        <nav class="navbar navbar-expand-lg">
-            <a class="navbar-brand ms-3" href="#">Network</a>
+        <nav class="navbar navbar-expand-lg justify-content-center">
+            <a class="navbar-brand ms-3 " href="#">Network</a>
         
-            <div>
                 <ul class="navbar-nav mr-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
@@ -39,7 +39,7 @@
                     </li>
                 {% endif %}
                 </ul>
-            </div>
+           
             </nav>
 
         

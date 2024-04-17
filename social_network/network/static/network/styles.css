@@ -16,12 +16,31 @@ p.post-date {
     font-size: small;
 }
 
+div.post-div {
+    background-color: white;
+}
 
-div.col-5.post-div:hover {
+div.post-div:hover {
     background-color: rgb(238, 238, 238);
 
 }
 
 div.container-fluid {
     background-color: rgb(248, 248, 248);
+}
+
+#new-post {
+    background-color: white;
+}
+
+.post-date {
+    font-size: smaller;
+}
+
+div.img-div {
+    width: 90px;
+}
+
+#like_button {
+    background-color: rgb(187, 187, 255);
 }
