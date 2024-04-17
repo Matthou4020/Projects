@@ -2,12 +2,19 @@
 
 {% block body %}
     {% if user.is_authenticated %}
-    <h2>Your active listings</h2>
     {% endif %}
     <h2>Active listings</h2>
     <ul>
         {% for listing in auctionlistings %}
-            <li><a href="{% url 'listing' listing.title %}">{{listing.title}}</a></li>
+            <div class="row border me-4">
+                <div class="col-2">
+                    <img class="img-fluid p-2" src="{{listing.imageurl}}" alt="">
+                </div>
+                <div class="col-6">
+                    <h3><a class="custom-link" href="{% url 'listing' listing.title %}">{{listing.title}}</a></h3>
+                    <p><strong>Current price:</strong> {{listing.highestbid}} $</p>
+                </div>
+            </div>
         {% endfor %}
     </ul>
 {% endblock %}

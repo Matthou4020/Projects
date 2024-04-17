@@ -1,49 +1,66 @@
 {% extends "auctions/layout.html" %}
+
 {% block body %}
-
-<h3>{{listing.title}}</h3>
-{% if owner%}
-<form action="{% url 'listing' listing.title %}" method="post">
-    {% csrf_token %}
-    {{deleteform}}
-
-    <button type="submit" name="button_action" value="end_listing">End listing</button></form>
-{% endif %}
- <img src="{{listing.imageurl}}" alt="listing image">
- <h4>Starting bid:</h4>
-    <p>{{listing.startingbid}}</p>
-    <h4>Current Highest Bid:</h4>
-    <p>{{ highestbid }}</p>
-
-    {% if user.is_authenticated %}
-    <form action="{% url 'listing' listing.title %}" method="post">
-        {% csrf_token %}
-        {{ bidform }}
-    </form>
     
-    <form action="{% url 'listing' listing.title %}" method="post">   
-        {% csrf_token %}
-        {{ watchlistform }}
-        {% if watchlist %}
-            <button type="submit" name="button_action" value="remove_watchlist">Remove from Watchlist</button>
-        {% else %}
-            <button type="submit" name="button_action" value="add_watchlist">Add to Watchlist</button>
+    <div class="container-fluid">
+         
+        {% if owner%}
+            <form action="{% url 'listing' listing.title %}" method="post">
+                {% csrf_token %}
+                {{deleteform}}
+                <button class="btn btn-danger" type="submit" name="button_action" value="end_listing">End listing</button>
+            </form>
         {% endif %}
-    </form>
-    
-    <h3>New comment</h3>
-    <form action="{% url 'listing' listing.title %}" method="post">
-        {% csrf_token %}
-        {{addcomment}}
-        <button type="submit" name="button_action" value="add_comment">Add comment</button>
-    </form>
-    {% endif %}
 
-    <h3>Comments</h3>
-    {% for comment in comments %}
-    <h4>{{comment.user}}</h4>
-    <p>{{comment.text}}</p>
-    <hr>
-    {% endfor %}
-        
+       <div class="row">
+           <div class="col-6">
+               <img class="img-fluid border" src="{{listing.imageurl}}" alt="listing image">
+           </div>
+            
+            <div class="col-6">
+                <h2>Listing: {{listing.title}}</h2>
+                <h5 class="text-muted">{{listing.description}}</h5>
+                <h4>
+                    {{ highestbid }} $
+                </h4>
+                    
+                {% if user.is_authenticated %}
+                    <form class="form-control mb-2 py-2 " action="{% url 'listing' listing.title %}" method="post">
+                        <label for="bid-form" class="form-label">Your bid</label>
+                        <div id="bid-form" class="row ms-1 me-2"> {{ bidform.bid }}</div>
+                        {% csrf_token %}
+                    </form>
+                   
+                    <form action="{% url 'listing' listing.title %}" method="post">
+                        {% csrf_token %}
+                        {{ watchlistform }}
+                    {% if watchlist %}
+                            <button type="submit" name="button_action" value="remove_watchlist">Remove from Watchlist</button>
+                    {% else %}
+                            <button type="submit" name="button_action" value="add_watchlist">Add to Watchlist</button>
+                {% endif %}
+                    </form>
+            </div>
+        </div>
+            
+        <div class="row">
+            <div class="col-6">
+                <h3>Comments</h3>
+                    <form class="form-control mb-3" action="{% url 'listing' listing.title %}" method="post">
+                        {% csrf_token %}
+                        <label for="add-comment" class="form-label"></label>
+                        <div id="add-comment" class="row">{{addcomment}}</div>
+                        <button type="submit" name="button_action" value="add_comment">Add comment</button>
+                    </form>
+                    {% endif %}
+                {% for comment in comments %}
+                <h4>{{comment.user}}</h4>
+                <p>{{comment.text}}</p>
+                <hr>
+                {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

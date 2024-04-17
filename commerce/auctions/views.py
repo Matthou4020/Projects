@@ -110,6 +110,7 @@ def listing(request, listing):
 
     try:
         comments = Comment.objects.filter(listing=current_listing)
+
     except ObjectDoesNotExist:
         pass
 
@@ -202,12 +203,11 @@ def watchlist(request):
             return HttpResponseRedirect("")
 
 def categories(request):
-    auctionlistings = AuctionListing.objects.all()
+    auctionlistings = AuctionListing.objects.filter(won=False)
     categories = set()
     for listing in auctionlistings:
         categories.add(listing.type)
-    
-    
+
     return render (request, "auctions/categories.html", {
         "categories":categories,
     })
