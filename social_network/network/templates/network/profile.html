@@ -3,19 +3,27 @@
 {% block body %}
 <div class="container-fluid">
     
-    <h1 id="user_profile">{{username}}</h1>
-    {% if username != user.username %}
-        <button id="toggle_button" class="btn btn-primary"></button>
-    {% endif %}
-    <h3>Followers: 0</h3>
-    <h3>Follows: 0</h3>
-    <h3>Posts</h3>
+    <div class="row m-1">
+        <h1 id="user_profile">{{username}}</h1>
+        
+        <div class="col">
+            {% if username != user.username %}
+            <button id="toggle_button" class="btn btn-primary"></button>
+        {% endif %}
+        </div>
+            <h3>Followers: {{followers_count}} </h3>
+            <h3>Follows: {{follows_count}}</h3>
+            <h3>Posts: {{posts.count}}</h3>
+    </div>
+
     {% for post in posts %}
-        <div>
-            <span>{{post.content}}</span>
+        <div class="row ms-1 mb-3 border-bottom">
+            <span>
                 {% if username == user.username %}
-                <button class="btn btn-outline-primary btn-sm">Edit</button>
+                <button class=" edit-button btn btn-outline-secondary btn-sm">Edit</button>
                 {% endif %}
+                <span>{{post.content}}</span>
+            </span>
         </div>
     {% endfor %}
 </div>

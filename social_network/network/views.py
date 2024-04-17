@@ -117,12 +117,18 @@ def profile(request, username):
     current_user = request.user
     profile = User.objects.get(username=username)
     posts = Post.objects.filter(user=profile).order_by("-creation_date")
+    posts_count = posts.count()
+    follows_count = profile.follows.count()
+    followers_count = profile.follower.count()
 
     return render(request, "network/profile.html", {
         "username":username,
         "posts": posts,
         "profile":profile,
-        "user":current_user
+        "user":current_user,
+        "followers_count": followers_count,
+        "follows_count": follows_count,
+        "posts_count": posts_count
     })
 
 
@@ -198,10 +204,8 @@ def posts(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         user_id = data.get("user_id")
-        print(user_id)
         post_id = data.get("post_id")
         action = data.get("action")
-        print(action)
 
         if action == "like": 
             like = Like.objects.create(user_id=user_id, post_id=post_id)
@@ -211,7 +215,7 @@ def posts(request):
                                  "actualizedCount":f"{actualized_count}"})
             
         if action =="unlike":
-            like = Like.objects.get(post_id=post_id)
+            like = Like.objects.get(post_id=post_id,user_id=user_id)
             like.delete()
             actualized_count = Like.objects.filter(post_id=post_id).count()
             return JsonResponse({"message":f"post succesfully unliked",

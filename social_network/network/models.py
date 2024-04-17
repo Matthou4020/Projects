@@ -6,6 +6,7 @@ from django.utils import timezone
 class User(AbstractUser):
     follows = models.ManyToManyField('self', symmetrical=False, related_name='follower', blank=True)
     
+    
     def __str__(self):
         return self.username
 

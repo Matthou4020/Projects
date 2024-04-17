@@ -24,27 +24,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     // I will need to check that the text area respects the constraints of the model.
     // Add my variable types
-    if (document.querySelector('.btn-sm')) {
-        const edit_buttons = document.querySelectorAll('.btn-sm');
+    if (document.querySelector('.edit-button')) {
+        const edit_buttons = document.querySelectorAll('.edit-button');
         edit_buttons.forEach(function(button) {
             button.addEventListener('click', () => {
                 button.style.display = 'none'
 
-                span = button.previousElementSibling;
-                const previous_content = span.innerHTML;
-                span.innerHTML = '';
+                paragraph = button.nextElementSibling;
+                const previous_content = paragraph.innerHTML;
+                paragraph.innerHTML = '';
                 textarea = document.createElement('textarea');
                 textarea.id = "edited_post";
                 textarea.rows = 1;
                 textarea.cols = 50;
                 textarea.value = previous_content;
-                span.appendChild(textarea);
+                paragraph.appendChild(textarea);
                 textarea.focus();
 
                 validate = document.createElement('button')
                 validate.className = 'btn btn-outline-primary btn-sm'
+                validate.style.display='block'
                 validate.innerHTML = 'confirm'
-                span.appendChild(validate)
+                paragraph.appendChild(validate)
 
                 //I don't precisely know what the following does. It comes from CS50's AI and it solves
                 // a problem I've had with a csrf error while trying to put data in 
@@ -69,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         })
                     })
 
-                    span.innerHTML =  edited_content
+                    paragraph.innerHTML =  edited_content
                 })
 
             })
@@ -86,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.follows.includes(user_profile)) {
                 toggle_button.innerHTML = 'Unfollow';
+                toggle_button.style.backgroundColor = 'darkblue';
             } else {
                 toggle_button.innerHTML = 'Follow';
             }
@@ -94,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
         toggle_button.addEventListener('click', function() {
             if (toggle_button.innerHTML === 'Follow') {
                 toggle_button.innerHTML ='Unfollow';
+                toggle_button.style.backgroundColor = 'darkblue';
                 fetch(`/users/${user_profile}`, {
                     method:'POST',
                     body: JSON.stringify({
@@ -107,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             } else {
                 toggle_button.innerHTML = 'Follow';
+                toggle_button.style.backgroundColor = 'blue'
                 fetch(`/users/${user_profile}`, {
                     method:'POST',
                     body: JSON.stringify({
@@ -139,9 +143,9 @@ document.addEventListener('DOMContentLoaded', function() {
             .then (data => {
                 span.innerHTML = data.likeCount
                 const hasLiked = data.hasLiked
-                console.log(hasLiked)
                 if (hasLiked === true) {
-                    likeButton.innerHTML = 'Unlike'
+                    likeButton.innerHTML = 'Liked'
+                    likeButton.style.backgroundColor = 'darkblue'
                 } else {
                     likeButton.innerHTML = 'Like'
                 }
@@ -149,7 +153,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             likeButton.addEventListener('click', () => {
                 if (likeButton.innerHTML === 'Like') {
-                    likeButton.innerHTML = 'Unlike';
+                    likeButton.innerHTML = 'Liked';
+                    likeButton.style.backgroundColor = 'darkblue';
                     fetch('/posts', {
                         method:'POST',
                         body: JSON.stringify({
@@ -160,12 +165,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                     .then(response => response.json())
                     .then(data => {
-                        span.innerHTML = data.actualizedCount,
-                        console.log(data)
-                        
+                        span.innerHTML = data.actualizedCount                        
                     });
                 } else {
                     likeButton.innerHTML = 'Like';
+                    likeButton.style.backgroundColor = 'blue';
                     fetch('/posts', {
                         method:'POST',
                         body:  JSON.stringify({
@@ -176,9 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                     .then(response => response.json())
                     .then(data => {
-                        span.innerHTML = data.actualizedCount,
-                        console.log(data)
-                        
+                        span.innerHTML = data.actualizedCount                        
                     });
                 }
             })
