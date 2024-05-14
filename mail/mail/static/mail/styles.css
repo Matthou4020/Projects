@@ -1,8 +1,55 @@
-textarea {
-    min-height: 400px;
+#compose-body {
+    height: 30vh;
 }
 
-.mail_list {
-    border: 1px solid black;
-    padding-left: 10px;
+.navbar {
+    background-color: darkblue;
 }
+
+.nav-item {
+    color: white;
+}
+
+.nav-link {
+    color: white;
+
+}
+
+strong {
+    color: darkblue;
+}
+
+.menu-btn {
+    color: darkblue;
+}
+
+.menu-btn.active {
+    background-color: darkblue;
+    color: white;
+    font-weight: bold;
+}
+
+.restore-btn {
+    opacity: 0;
+}
+
+.archives-row:hover .restore-btn {
+    color: darkblue;
+}
+
+.delete-btn {
+    opacity: 0;
+}
+
+.mail-row:hover .delete-btn {
+    opacity: 0.4;
+}
+
+.delete-btn:hover {
+    opacity: 1;
+    color: red;
+}
+
+
+
+
