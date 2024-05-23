@@ -2,6 +2,15 @@
     height: 30vh;
 }
 
+#mail-body {
+    height: 80vh;
+}
+
+.view {
+    display: none;
+}
+
+
 .navbar {
     background-color: darkblue;
 }
@@ -29,12 +38,18 @@ strong {
     font-weight: bold;
 }
 
-.restore-btn {
-    opacity: 0;
+.nav-link:hover {
+    color: white;
 }
 
-.archives-row:hover .restore-btn {
+#compose-btn {
     color: darkblue;
+    border: 1px solid darkblue;
+}
+
+#compose-btn:hover {
+    background-color: darkblue;
+    color: white;
 }
 
 .delete-btn {
@@ -48,8 +63,66 @@ strong {
 .delete-btn:hover {
     opacity: 1;
     color: red;
+    cursor: pointer;
 }
 
 
+.restore-btn {
+    opacity: 0;
+}
+
+@keyframes hide {
+    0% {
+        opacity: 1;
+        font-size: 100%;
+        padding: auto;
+        margin: 100%;
+        border-width: 100%;
+    }
+    
+    75% {
+        opacity: 0; 
+        border-color: transparent;
+        font-size: 100%;
+        margin: 100%;
+        padding: 0px;
+        border-width: 100%;
+
+    }
+
+    100% {
+        opacity: 0;
+        font-size: 0px;
+        margin: 0px;
+        padding: 0px;
+        border-width: 0px;
+        border-color: transparent;
+
+    }
+}
+
+.mail-row {
+    animation-name: hide;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+    animation-play-state: paused;
+}
+
+
+.archives-row:hover .restore-btn {
+    opacity: 1;
+    color: darkblue;
+    background-color: transparent;
+}
+
+.restore-btn:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.subject-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
 

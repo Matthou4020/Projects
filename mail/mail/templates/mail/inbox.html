@@ -21,7 +21,7 @@
 
             <div id="emails-view" class="view">
                 <div class="table-container">
-                    <table class="table table-responsive table-hover user-select-none">
+                    <table class="table table-hover user-select-none">
                         <thead>
                             <tr>
                                 <th class="col-3">Sent by</th>
@@ -35,8 +35,24 @@
                     </table>
                 </div>
             </div>
-            <div id="display-mail" class="view">
+            
+            <div id="mail-display" class="view container-fluid">
+                <div  >
+                    <div id="mail-header">
+                        <h4 id="header"></h4>
+                        <p id="sender"></p>
+                    </div>
+                    <div class="container-fluid p-0 ">
+                        <div id="mail-body" class="border p-2">
+                            <p id="date"></p>
+                            <p id="content"></p>
+                            <button id="archive-btn">Archive</button>
+                            <button id="reply-btn">Reply</button>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div id="archives" class="view">
                 <table class="table table-hover user-select-none">
                     <thead>
@@ -64,9 +80,8 @@
                 </table>
             </div>
             <div id="compose-view" class="view">
-                <h3>New Email</h3>
                 <form id="compose-form">
-                    <div class="form-group mb-4">
+                    <div class="form-group mt-4">
                         From: <input disabled class="form-control" value="{{ request.user.email }}">
                     </div>
                     <div class="form-group mb-4">
@@ -76,7 +91,7 @@
                         <input class="form-control" id="compose-subject" placeholder="Subject">
                     </div>
                     <textarea class="form-control mb-3" id="compose-body" placeholder="Body"></textarea>
-                    <input type="submit" class="btn btn-primary"/>
+                    <button type="submit" id="compose-btn" class="btn">Send</button>
                 </form>
             </div>
         </div>
