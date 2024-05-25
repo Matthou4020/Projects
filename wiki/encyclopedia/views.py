@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from django import forms
 from . import views
 import markdown2
 from . import util
 import random
+from .forms import SearchForm, TitleForm, NewPageForm
 
 # In settings.py I have inserted the path to the following context processor.
 # This way, when generating the "random page" link in every page,
@@ -13,57 +13,9 @@ import random
 def random_title(request):
     return {'random_title': random.choice(util.list_entries())}
 
-# I did the same for the search form
+
 def searchform(request):
     return {'form': SearchForm()}
-
-
-class SearchForm(forms.Form):
-    q = forms.CharField(
-        widget=forms.TextInput(attrs={
-            'placeholder': 'Search Encyclopedia'
-            })
-        , label=''
-    )
-
-# Here is my title form when editing or creating a new page.
-# When editing, the is_edit value will be set to True by the edit view. 
-# This way, I can set different outcomes whether the form is submitted via a
-# create page or an edit page.
-class TitleForm(forms.Form):
-    title = forms.CharField(
-        required=True,
-        widget=forms.TextInput(attrs={
-            'placeholder': 'Title of your page'
-        }), label=''
-    )
-    is_edit = forms.BooleanField(
-        widget=forms.HiddenInput(), 
-        required=False)
-    
-# I chose to override the title form's clean function, 
-# because it wasn't working properly for my purposes
-    def clean(self):
-        cleaned_data = super().clean()
-        title = cleaned_data.get('title')
-        is_edit = cleaned_data.get('is_edit')
-        if not is_edit and title in util.list_entries():
-            raise forms.ValidationError("This title already exists.")
-
-        elif is_edit:
-            if title in util.list_entries():
-                return cleaned_data
-
-
-class NewPageForm(forms.Form):
-    content = forms.CharField(
-        widget=forms.Textarea(attrs={
-            'id': 'page_text',
-            'placeholder': 'Text',
-            'rows': 4,
-            'cols': 50
-        }), label=''
-    )
 
 
 def index(request):
@@ -72,8 +24,8 @@ def index(request):
             "entries": util.list_entries()
         })
     
-# Here we do the mardown to HTML conversion so the content
-# is formatted in the viewport
+
+# Markdown to HTML conversion
 def entry(request, title):
     entry = util.get_entry(title)
     if entry is not None:
