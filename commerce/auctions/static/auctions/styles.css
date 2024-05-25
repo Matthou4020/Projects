@@ -1,5 +1,7 @@
-body {
+
+.body {
     padding: 10px;
+    max-width: 1500px;
 }
 
 a.custom-link {

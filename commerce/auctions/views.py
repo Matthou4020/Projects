@@ -7,6 +7,7 @@ from django.urls import reverse
 from .models import User, AuctionListing, Bid, Comment, WatchList, AuctionWinner
 from .forms import NewListingForm, WatchlistForm, BidForm, DeleteForm, AddComment
 from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import get_object_or_404
 
 def index(request):
         active_listings = AuctionListing.objects.filter(won=False)
@@ -147,8 +148,10 @@ def listing(request, listing):
         if button_action == "end_listing":
             current_listing.won = True
             current_listing.save()
-            winningbid = Bid.objects.get(amount=current_listing.highestbid)
+            
+            winningbid = get_object_or_404(Bid, amount=current_listing.highestbid)
             winner = winningbid.user
+
             AuctionWinner.objects.create(user=winner, listing=current_listing)
         
         form = BidForm(request.POST)
@@ -213,7 +216,7 @@ def categories(request):
     })
  
 def category(request, category):
-    listings = AuctionListing.objects.filter(type=category)
+    listings = AuctionListing.objects.filter(type=category, won=False)
     return render(request, "auctions/category.html", {
         "listings":listings
 
