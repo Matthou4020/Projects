@@ -17,6 +17,7 @@
     
     
         <div class="content col-10 pe-4">
+
             <div class="ps-1" id="mailbox-title"></div>
 
             <div id="emails-view" class="view">
@@ -37,18 +38,28 @@
             </div>
             
             <div id="mail-display" class="view container-fluid">
-                <div  >
-                    <div id="mail-header">
+                <div>
+                    <div class="border mb-2 p-3" id="mail-header">
                         <h4 id="header"></h4>
-                        <p id="sender"></p>
                     </div>
                     <div class="container-fluid p-0 ">
                         <div id="mail-body" class="border p-2">
-                            <p id="date"></p>
-                            <p id="content"></p>
-                            <button id="archive-btn">Archive</button>
-                            <button id="reply-btn">Reply</button>
-                        </div>
+                            <div class="ms-3">
+                                <div>
+                                    <p id="sender"></p>
+                                
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <p id="recipient"></p>
+                                    <p id="date"></p>
+                                </div>
+                                <div>
+                                    <p id="content"></p>
+                                </div>
+                                <button id="archive-btn">Archive</button>
+                                    <button id="reply-btn">Reply</button>
+                                                        </div>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -57,28 +68,31 @@
                 <table class="table table-hover user-select-none">
                     <thead>
                         <tr>
-                            <th>Sent by</th>
-                            <th>Subject</th>
-                            <th>Received on</th>
+                            <th class="col-3">Sent by</th>
+                            <th class="col-6">Subject</th>
+                            <th class="col-2">Received on</th>
+                            <th class="col-1"></th>
                         </tr>
                     </thead>
                     <tbody id="archives-view-table">
                     </tbody>
                 </table>
             </div>
+
             <div id="sent-view" class="view">
                 <table class="table table-hover user-select-none">
                     <thead>
                         <tr>
-                            <th>Sent by</th>
-                            <th>Subject</th>
-                            <th>Received on</th>
+                            <th class="col-3">Sent by</th>
+                            <th class="col-6">Subject</th>
+                            <th class="col-2">Received on</th>
                         </tr>
                     </thead>
                     <tbody id="sent-view-table">
                     </tbody>
                 </table>
             </div>
+
             <div id="compose-view" class="view">
                 <form id="compose-form">
                     <div class="form-group mt-4">

@@ -42,9 +42,18 @@ strong {
     color: white;
 }
 
-#compose-btn {
+#compose-btn, #archive-btn, #reply-btn {
     color: darkblue;
     border: 1px solid darkblue;
+    
+}
+
+#archive-btn, #reply-btn {
+    display: inline-block;
+    border: none;
+    padding-right: 10px;
+    padding-bottom: 0;
+    padding-left: 0 ;
 }
 
 #compose-btn:hover {
@@ -101,7 +110,7 @@ strong {
     }
 }
 
-.mail-row {
+.mail-row, .archives-row {
     animation-name: hide;
     animation-duration: 0.3s;
     animation-fill-mode: forwards;
@@ -125,4 +134,19 @@ strong {
     text-overflow: ellipsis;
   }
 
+#sender {
+    display: inline;
+    font-size: medium;
+}
 
+#date {
+    font-size: smaller;
+}
+
+#recipient {
+    font-size:medium;
+}
+
+#content {
+    font-size: larger;
+}

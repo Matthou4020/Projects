@@ -4,17 +4,15 @@
 
   // Keep refactoring
 
-  // I cannot deactivate a button by clicking on it. Check logic
-
-  // Check visual coherence of rows from one view to the other
-
-  // Display mails newly received by querying the database. Same for the newly archived or sent messages. 
-
-  // Check that everyting works properly.
+  // I need to find a way for the new mails to appear on top. When new mails are appended
+  // they go at the end of the mail list if I don't refresh the app.
 
   // Add error-catching
 
-  // Not responsive
+  // Add responsiveness
+
+  // For some reason, when restoring a mail after loading the sent view or after sending
+  // a mail, the inbox does not display the newly restored mail without a refresh.
 
 document.addEventListener('DOMContentLoaded', function() {
   window.onload = () => {
@@ -27,18 +25,21 @@ document.addEventListener('DOMContentLoaded', function() {
   // By default, load the inbox
   load_mailbox('inbox');
 
-
   function addMenuButtonListeners() {
 
     // Use toggle buttons to toggle between views
-    const buttons = document.querySelectorAll('.menu-btn')
+    const buttons = document.querySelectorAll('.menu-btn');
+
     buttons.forEach(button => {
       button.addEventListener('click', () => {
+        // Remove 'active' class from all buttons except the clicked one
         buttons.forEach(otherButton => {
           if (otherButton !== button) {
             otherButton.classList.remove('active')
           }
         })
+        
+        // Perform the associated action
         if (button.id === 'inbox') {
           load_mailbox('inbox');
         } else if (button.id === 'compose') {
@@ -48,20 +49,25 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (button.id === 'archived') {
           load_mailbox('archive');
         }
+        
       })
     })
   }
+
 
   function toggleButton(mailbox) {
     const menuButtons = document.querySelectorAll('.menu-btn') 
     menuButtons.forEach(button => {
       if (button.id === mailbox ){
-        button.classList.toggle('active')
+        if(!button.classList.contains('active')) {
+          button.classList.toggle('active')
+        }
       } else {
         button.classList.remove('active')
       }
     })
   }
+
 
   // Display full mail if click on a row of the inbox
   function display_mail(mail) {
@@ -73,10 +79,15 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('sender').innerHTML = `${mail.sender}`;
     document.getElementById('date').innerHTML = `${mail.timestamp}`;
     document.getElementById('content').innerHTML = `${mail.body}`;
+
+    // Update later if I want the recipient's information to be dynamic
+    document.getElementById('recipient').innerHTML = `To: you`;
     
     // Reply and archive logic
     let reply = document.querySelector("#reply-btn");
     let archive = document.querySelector("#archive-btn");
+    reply.classList.add("btn")
+    archive.classList.add("btn")
 
     reply.addEventListener('click', () => {
       compose_email(mail)
@@ -94,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
+
   function displayCurrentView(elementID) {
     views = document.querySelectorAll('.view')
     views.forEach(view => {
@@ -102,6 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
     newView = document.getElementById(elementID);
     newView.style.display = 'block';
   }
+
 
   function load_mailbox(mailbox) {
     
@@ -201,7 +214,6 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(response => response.json())
       .then(emails => {
         if (!document.querySelector('.archives-row')) {
-          console.log("triggered")
           
           // Build table view
           for(let i = 0; i < emails.length; i++) {
@@ -218,15 +230,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Populate table rows
             const dateCell = document.createElement('td');
-            const subjectCell = document.createElement('td')
-            const senderCell = document.createElement('td')
+            const subjectCell = document.createElement('td');
+            const senderCell = document.createElement('td');
 
             dateCell.innerHTML = `${emails[i].timestamp}`
-            subjectCell.innerHTML = `${emails[i].subject} <span class='text-muted'>${emails[i].body}</span>`
-            senderCell.innerHTML = `${emails[i].sender}`
+            subjectCell.innerHTML = `${emails[i].subject} <span class='text-muted'>${emails[i].body}</span>`;
+            senderCell.innerHTML = `${emails[i].sender}`;
 
             // Add a restore button
-            const restoreBtn = document.createElement('td')
+            const restoreBtn = document.createElement('td');
 
             restoreBtn.classList.add('restore-btn');
             restoreBtn.innerHTML = "Restore";
@@ -236,13 +248,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Restore button logic
             restoreBtn.addEventListener('click', () => {
+              console.log("unarchived")
               fetch(`/emails/${emails[i].id}`, {
                 method: 'PUT',
                 body: JSON.stringify({
                   archived: false
                 })
-              });
-              load_mailbox('inbox')
+              })
+              .then(() => {
+                row.style.animationPlayState = 'running';
+                row.addEventListener('animationend', () => {
+                  row.remove()
+                  load_mailbox('inbox');
+                })
+              })
             });
           }}
         })
@@ -274,7 +293,6 @@ document.addEventListener('DOMContentLoaded', function() {
             senderCell.innerHTML = `${sender}`
             subjectCell.innerHTML = `${subject} <span class='text-muted'>${content}</span>`
             
-
             dateCell.innerHTML = `${timestamp}`
 
             body.appendChild(row)
@@ -334,4 +352,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   };
 
-}); // DOMeventlistener closure
+}); // DOMeventlistener closed
